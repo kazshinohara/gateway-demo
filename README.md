@@ -153,12 +153,3 @@ kubectl apply -f split-httproute.yaml
 ```shell
 curl -H "host: mc-gateway-demo.internal" http://${VIP}/ | jq
 ```
-```shell
-{
-  "kind": "blue",
-  "version": "v1",
-  "region": "asia-northeast1",
-  "cluster": "cluster-a",
-  "hostname": "blue-bb64b946-kkj7q"
-}
-```
