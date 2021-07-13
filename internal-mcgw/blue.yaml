@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue
+  template:
+    metadata:
+      labels:
+        app: blue
+    spec:
+      containers:
+        - image: asia-northeast1-docker.pkg.dev/kzs-sandbox/public/whereami:v1
+          imagePullPolicy: Always
+          name: blue
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: VERSION
+              value: "v1"
+            - name: KIND
+              value: "blue"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue
+spec:
+  selector:
+    app: blue
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+  name: blue
+
+
