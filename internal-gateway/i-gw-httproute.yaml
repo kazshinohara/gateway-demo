@@ -1,0 +1,28 @@
+kind: HTTPRoute
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: internal-httproute
+  labels:
+    gateway: internal-gateway
+spec:
+  hostnames:
+    - "i-gw.gcpx.org"
+  rules:
+    - forwardTo:
+        - serviceName: whereami-v1
+          port: 8080
+    - matches:
+        - headers:
+            type: Exact
+            values:
+              env: v2
+      forwardTo:
+        - serviceName: whereami-v2
+          port: 8080
+    - matches:
+        - path:
+            type: Prefix
+            value: /version
+      forwardTo:
+        - serviceName: whereami-v3
+          port: 8080
