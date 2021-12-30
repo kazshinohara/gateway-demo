@@ -1,0 +1,23 @@
+kind: HTTPRoute
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: internal-multi-cluster-httproute-split
+  labels:
+    gateway: internal-multi-cluster-gateway
+spec:
+  hostnames:
+    - "i-mc-gw.gcpx.org"
+  rules:
+    - forwardTo:
+        - backendRef:
+            group: net.gke.io
+            kind: ServiceImport
+            name: tyo1-whereami
+          port: 8080
+          weight: 10
+        - backendRef:
+            group: net.gke.io
+            kind: ServiceImport
+            name: tyo2-whereami
+          port: 8080
+          weight: 90

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tyo1-whereami
+  namespace: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tyo1-whereami
+  template:
+    metadata:
+      labels:
+        app: tyo1-whereami
+    spec:
+      containers:
+        - image: asia-northeast1-docker.pkg.dev/kzs-sandbox/public/whereami:1.0.2
+          name: tyo1-whereami
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: VERSION
+              value: "v1"
+            - name: KIND
+              value: "tyo1-test-app"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tyo1-whereami
+  namespace: test
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: tyo1-whereami
+  type: ClusterIP
+---

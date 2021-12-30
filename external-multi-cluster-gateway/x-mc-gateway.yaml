@@ -1,0 +1,21 @@
+kind: Gateway
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: external-multi-cluster-gateway
+spec:
+  gatewayClassName: gke-l7-gxlb-mc
+  listeners:
+    - protocol: HTTPS
+      port: 443
+      routes:
+        kind: HTTPRoute
+        selector:
+          matchLabels:
+            gateway: external-multi-cluster-gateway
+      tls:
+        mode: Terminate
+        options:
+          networking.gke.io/pre-shared-certs: x-mc-gw-cert
+  addresses:
+    - type: NamedAddress
+      value: x-mc-gw-ip
