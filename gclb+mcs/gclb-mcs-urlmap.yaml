@@ -1,0 +1,25 @@
+defaultService: https://www.googleapis.com/compute/v1/projects/kzs-sandbox/global/backendServices/whereami
+kind: compute#urlMap
+name: gclb-mcs-urlmap
+hostRules:
+  - hosts:
+      - '*'
+    pathMatcher: path-matcher-1
+pathMatchers:
+  - defaultService: https://www.googleapis.com/compute/v1/projects/kzs-sandbox/global/backendServices/whereami
+    name: path-matcher-1
+    routeRules:
+      - matchRules:
+          - headerMatches:
+              - headerName: target
+                exactMatch: osa1
+        priority: 1
+        service: https://www.googleapis.com/compute/v1/projects/kzs-sandbox/global/backendServices/osa1-whereami
+tests:
+  - description: Test routing for location header with osa
+    host: '*'
+    path: /cluster
+    headers:
+      - name: target
+        value: osa1
+    service: https://www.googleapis.com/compute/v1/projects/kzs-sandbox/global/backendServices/osa1-whereami
