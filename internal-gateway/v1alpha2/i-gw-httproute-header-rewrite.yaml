@@ -1,0 +1,36 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+metadata:
+  name: internal-httproute-header-rewrite
+spec:
+  parentRefs:
+    - name: internal-gateway
+  hostnames:
+    - "i-gw.gcpx.org"
+  rules:
+    - backendRefs:
+        - name: whereami-v1
+          port: 8080
+    - matches:
+        - headers:
+            - type: Exact
+              name: env
+              value: v2
+      filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            remove:
+              - my-header
+            add:
+              - name: my-header
+                value: hello
+      backendRefs:
+        - name: whereami-v2
+          port: 8080
+    - matches:
+        - path:
+            type: Exact
+            value: /version
+      backendRefs:
+        - name: whereami-v3
+          port: 8080

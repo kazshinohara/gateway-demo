@@ -1,0 +1,15 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+metadata:
+  name: external-multi-cluster-httproute
+spec:
+  parentRefs:
+    - name: external-multi-cluster-gateway
+  hostnames:
+    - "x-mc-gw.gcpx.org"
+  rules:
+    - backendRefs:
+        - group: net.gke.io
+          kind: ServiceImport
+          name: whereami
+          port: 8080

@@ -1,0 +1,30 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+metadata:
+  name: internal-multi-cluster-httproute-hbr
+spec:
+  parentRefs:
+    - name: internal-multi-cluster-gateway
+  hostnames:
+    - "i-mc-gw.gcpx.org"
+  rules:
+    - matches:
+        - headers:
+            - type: Exact
+              name: target
+              value: tyo1
+      backendRefs:
+        - group: net.gke.io
+          kind: ServiceImport
+          name: tyo1-whereami
+          port: 8080
+    - matches:
+        - headers:
+            - type: Exact
+              name: target
+              value: tyo2
+      backendRefs:
+        - group: net.gke.io
+          kind: ServiceImport
+          name: tyo2-whereami
+          port: 8080
